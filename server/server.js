@@ -7,8 +7,9 @@ let {Todo} = require("./models/todo.js");
 let {User} = require("./models/user.js");
 
 let app = express();
+const port = process.env.PORT || 3000;
 
-//middleware:
+// middleware to parse JSON
 app.use(bodyParser.json());
 
 // Create new todo
@@ -61,9 +62,9 @@ app.get("/todos/:id", (request, response) => {
 // These catch all errors
 
 
-
-app.listen(3000, () => {
-  console.log("Started on port 3000.");
+// Start server 
+app.listen(port, () => {
+  console.log(`Started on port ${port}.`);
 });
 
 module.exports.app = app;
