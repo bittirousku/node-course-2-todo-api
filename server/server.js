@@ -1,5 +1,6 @@
-let express = require("express");
-let bodyParser = require("body-parser");
+const _ = require("lodash");
+const express = require("express");
+const bodyParser = require("body-parser");
 const {ObjectId} = require("mongodb");
 
 let {mongoose} = require("./db/mongoose.js");
@@ -77,6 +78,37 @@ app.delete("/todos/:id", (request, response) => {
 
 
 });
+
+app.patch("/todos/:id", (request, response) => {
+  let id = request.params.id;
+  let body = _.pick(request.body, ["text", "completed"]);  // define what properties users can update
+  if (!ObjectId.isValid(id)) {
+    return response.status(404).send();
+  }
+
+  // completedAt property is updated by the program here, not the user
+  if (_.isBoolean(body.completed) && body.completed) {
+    body.completedAt = new Date().getTime();
+  } else {
+    body.completed = false;
+    body.completedAt = null;
+  }
+
+  Todo.findByIdAndUpdate(id, {
+    $set: body
+  }, {
+    new: true
+  }).then((todo) => {
+    if (!todo) {
+      return response.status(404).send();
+    }
+    response.status(200).send({todo});
+  }).catch((err) => {
+    response.status(400).send();
+  });
+});
+
+
 
 
 // Start server
