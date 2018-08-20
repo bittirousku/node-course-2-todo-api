@@ -1,10 +1,9 @@
 // use mongoose to interact with mongodb
 let mongoose = require("mongoose");
-let auth = require("auth.js");
 
 const db = {
   localhost: "mongodb://localhost:27017/TodoApp",
-  mlab: `mongodb://${auth.dbUser}:${auth.dbPassw}@ds225492.mlab.com:25492/udemy-node-course`
+  mlab: `mongodb://${process.env.dbUser}:${process.env.dbPassw}@ds225492.mlab.com:25492/udemy-node-course`
 };
 
 const mongoUrl = db.localhost || db.mlab;
