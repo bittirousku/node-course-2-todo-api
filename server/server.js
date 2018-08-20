@@ -39,18 +39,10 @@ app.get("/todos", (request, response) => {
 app.get("/todos/:id", (request, response) => {
   let id = request.params.id;
   if (!ObjectId.isValid(id)) {
-    // return response.send({
-    //   status: "Error",
-    //   errorMessage: "Invalid ID"
-    // });
-    response.status(404).send();
+    return response.status(404).send();
   }
   Todo.findById(id).then((todo) => {
     if (!todo) {
-        // return response.send({
-        //   "status": "Error",
-        //   "errorMessage": "Todo not found"
-        // });
         return response.status(404).send();
       }
     response.send({todo});
@@ -58,11 +50,36 @@ app.get("/todos/:id", (request, response) => {
     response.status(400).send();
   });
 });
-// Should use chained catches instead of erro callback,
+// Should use chained catches instead of error callback,
 // These catch all errors
 
 
-// Start server 
+app.delete("/todos/:id", (request, response) => {
+  // get id:
+  let id = request.params.id;
+  // validate id:
+  if (!ObjectId.isValid(id)) {
+    return response.status(404).send();
+  }
+  // Delete by id
+  Todo.findByIdAndRemove(id).then((todo) => {
+    // error if no todo exists
+    if (!todo) {
+      return response.status(404).send();
+    }
+    // return id after deleting
+    response.status(200).send({todo});
+  }).catch((err) => {
+    // catch errors
+    console.log(err);
+    response.status(400).send();
+  });
+
+
+});
+
+
+// Start server
 app.listen(port, () => {
   console.log(`Started on port ${port}.`);
 });

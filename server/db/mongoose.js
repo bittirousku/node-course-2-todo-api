@@ -6,7 +6,7 @@ const db = {
   mlab: `mongodb://${process.env.dbUser}:${process.env.dbPassw}@ds225492.mlab.com:25492/udemy-node-course`
 };
 
-const mongoUrl = db.mlab || db.localhost;
+const mongoUrl = db.localhost;
 mongoose.Promise = global.Promise;  // mongoose supports promises
 mongoose.connect(mongoUrl, { useNewUrlParser: true });
 
