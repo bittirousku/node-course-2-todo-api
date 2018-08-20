@@ -111,6 +111,15 @@ app.patch("/todos/:id", (request, response) => {
   });
 });
 
+// POST to /users
+app.post("/users", (request, response) => {
+  let body = _.pick(request.body, ["email", "password"]);
+  User.create(body).then((user) => {
+    response.send(user);
+  }).catch((err) => {
+    response.status(400).send(err);
+  });
+});
 
 // Start server
 app.listen(port, () => {
