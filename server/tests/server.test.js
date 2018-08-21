@@ -1,4 +1,5 @@
 // NOTE the server must not be running in the same port!
+// But Mongodb must be up and running
 const expect = require("expect");
 const request = require("supertest");
 const {ObjectID} = require("mongodb");
@@ -6,26 +7,10 @@ const {ObjectID} = require("mongodb");
 const {app} = require("../server.js");
 const {Todo} = require("../models/todo.js");
 const {User} = require("../models/user.js");
+const {todos, populateTodos, users, populateUsers} = require("./seed/seed.js");
 
-const todos = [{
-    _id: new ObjectID(),
-    text: "First test",
-  }, {
-    _id: new ObjectID(),
-    text: "second test",
-    completed: true,
-    completedAt: 333
-  }];
-
-beforeEach((done) => {
-  //remove everything before a test
-  //is this cool?? it modifies the production database for testing??
-  Todo.remove({}).then(() => {
-    return Todo.insertMany(todos);
-  }).then(() => {
-    done();
-  });
-});
+beforeEach(populateTodos);
+beforeEach(populateUsers);
 
 describe("POST /todos", () => {
   it("should create a new TODO", (done) => {
