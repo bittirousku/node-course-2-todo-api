@@ -126,11 +126,10 @@ app.post("/users", (request, response) => {
   });
 });
 
-
+// Private route to get user info
 app.get("/users/me", authenticate, (request, response) => {
   response.send(request.user);
 });
-
 
 // Start server
 app.listen(port, () => {
