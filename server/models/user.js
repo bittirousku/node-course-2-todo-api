@@ -34,6 +34,7 @@ let UserSchema = new mongoose.Schema({
   }]
 });
 
+// methods are instance methods
 // Override method toJSON to limit what gets back to user
 UserSchema.methods.toJSON = function () {
   let user = this;
@@ -61,6 +62,29 @@ UserSchema.methods.generateAuthToken = function () {
   return user.save().then(() => {
     return token;
   });
+};
+
+// statics are model methods
+UserSchema.statics.findByToken = function (token) {
+  let User = this;
+  let decoded;
+
+  try {
+    decoded = jwt.verify(token, "secret");
+  } catch (err) {
+    // return new Promise((resolve, reject) => {
+    //   reject();
+    // }
+    // simpler way:
+    return Promise.reject();
+  }
+
+  return User.findOne({
+    "_id": decoded._id,
+    "tokens.token": token,  // quotes are required when there is a dot in value
+    "tokens.access": "auth"
+  });
+
 };
 
 
