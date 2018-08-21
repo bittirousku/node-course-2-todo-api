@@ -174,3 +174,73 @@ describe("PATCH /todos/:id", () => {
       .end(done);
   });
 });
+
+describe("GET /users/me", () => {
+  it("should return user if authenticated", (done) => {
+    request(app)
+      .get("/users/me")
+      .set("x-auth", users[0].tokens[0].token)  // set header
+      .expect(200)
+      .expect((response) => {
+        expect(response.body._id).toBe(users[0]._id.toHexString());
+        expect(response.body.email).toBe(users[0].email);
+      })
+      .end(done);
+  });
+
+  it("should return 401 if not authenticated", (done) => {
+    request(app)
+      .get("/users/me")
+      .expect(401)
+      .expect((response) => {
+        expect(response.body).toEqual({});
+      })
+      .end(done);
+  });
+});
+
+describe("POST /users", () => {
+  it("should create a user", (done) => {
+    let email = "exx@exxample.com";
+    let password = "supersexret";
+
+    request(app)
+      .post("/users")
+      .send({email: email, password: password})
+      .expect(200)
+      .expect((response) => {
+        expect(response.headers["x-auth"]).toExist();
+        expect(response.body._id).toExist();
+        expect(response.body.email).toBe(email);
+      })
+      // Let's create a custom end handler
+      // do additional tests after the actual HTTP tests
+      // have been completed:
+      .end((err) => {
+        if (err) {
+          return done();
+        }
+        User.findOne({email: email}).then((user) => {
+          expect(user).toExist();
+          expect(user.password).toNotBe(password);
+          done();
+        });
+      });
+  });
+
+  it("should return validation errors if request invalid", (done) => {
+    request(app)
+      .post("/users")
+      .send({email: "kekkonen.urho.fi", password: "xxx"})
+      .expect(400)
+      .end(done);
+  });
+
+  it("should not create user if email in use", (done) => {
+    request(app)
+      .post("/users")
+      .send({email: users[0].email, password: users[0].password})
+      .expect(400)
+      .end(done);
+  });
+});

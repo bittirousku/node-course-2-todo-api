@@ -56,7 +56,7 @@ UserSchema.methods.generateAuthToken = function () {
     _id: user._id.toHexString(),
     access: access
   }, "secret").toString();
-  console.log("Trying to push access token to user object");
+  // console.log("Trying to push access token to user object");
   // user.tokens.push({access, token});  // this works although it shouldn't?
   user.tokens = user.tokens.concat({access, token});  // This supposedly works better
 
