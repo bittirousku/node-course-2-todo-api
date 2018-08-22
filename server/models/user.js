@@ -46,7 +46,6 @@ UserSchema.methods.toJSON = function () {
   return _.pick(userObject, ["_id", "email"]);
 };
 
-// Create some kind of method to generate a token? why?
 // Arrow functions don't bind "this" keyword, we have to use
 // regular function here:
 UserSchema.methods.generateAuthToken = function () {
