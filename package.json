@@ -1,7 +1,7 @@
 {
   "name": "todo-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "Udemy course exercise application",
   "main": "index.js",
   "scripts": {
     "start": "node server/server.js",
@@ -21,11 +21,11 @@
     "jsonwebtoken": "^8.3.0",
     "lodash": "^4.17.10",
     "mongodb": "^2.2.36",
-    "mongoose": "^5.2.8",
+    "mongoose": "^5.2.9",
     "validator": "^10.6.0"
   },
   "devDependencies": {
-    "expect": "^1.20.2",
+    "expect": "^21.2.1",
     "mocha": "^3.5.3",
     "nodemon": "^1.18.3",
     "supertest": "^2.0.1"
