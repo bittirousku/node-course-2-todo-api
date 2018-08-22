@@ -87,6 +87,38 @@ UserSchema.statics.findByToken = function (token) {
   });
 };
 
+
+/**
+ * Find a user in the database by email
+ * and check the the password hash matches the
+ * given password.
+ * @param  {String} email     [description]
+ * @param  {String} password  [description]
+ * @return {Promise}          [description]
+ */
+UserSchema.statics.findByCredentials = function (email, password) {
+  let User = this;
+
+  return User.findOne({email}).then((user) => {
+    if (!user) {
+      return Promise.reject();
+    }
+
+    return new Promise((resolve, reject) => {
+      let givenPassword = password;
+      let knownHash = user.password;
+      bcrypt.compare(givenPassword, knownHash, (error, result) => {
+        if (result) {
+          resolve(user);
+        } else {
+          reject();
+        }
+      });
+    });
+  });
+};
+
+
 // Create mongoose middleware function to hash passwords
 // have to use function syntax because we need "this" binding
 // also have to pass "next"
