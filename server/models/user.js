@@ -54,7 +54,7 @@ UserSchema.methods.generateAuthToken = function () {
   let token = jwt.sign({
     _id: user._id.toHexString(),
     access: access
-  }, "secret").toString();
+  }, process.env.JWT_SECRET).toString();
   // console.log("Trying to push access token to user object");
   // user.tokens.push({access, token});  // this works although it shouldn't?
   user.tokens = user.tokens.concat({access, token});  // This supposedly works better
@@ -84,7 +84,7 @@ UserSchema.statics.findByToken = function (token) {
   let decoded;
 
   try {
-    decoded = jwt.verify(token, "secret");
+    decoded = jwt.verify(token, process.env.JWT_SECRET);
   } catch (err) {
     // return new Promise((resolve, reject) => {
     //   reject();

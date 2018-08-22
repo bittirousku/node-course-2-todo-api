@@ -1,13 +1,13 @@
 let env = process.env.NODE_ENV || "development";  // this is set to "production" in Heroku!
+let config;
 console.log(`Starting ${env} environment`);
 
-if (env === "development") {
-  process.env.PORT = 3000;
-  process.env.MONGODB_URI = "mongodb://localhost:27017/TodoApp";
-} else if (env === "test") {
-  process.env.PORT = 3000;
-  process.env.MONGODB_URI = "mongodb://localhost:27017/TodoAppTest";
-} else {
-  // credentials variables are manually set in Heroku
-  process.env.MONGODB_URI = `mongodb://${process.env.dbUser}:${process.env.dbPassw}@ds225492.mlab.com:25492/udemy-node-course`;
+if (env === "development" || env === "test") {
+  config = require("./config.json");  // NOTE: this JSON should not be commited in real applications
+  let envConfig = config[env];
+  Object.keys(envConfig).forEach((key) => {
+    process.env[key] = envConfig[key];
+  });
 }
+// MONGODB_URI and JWT_SECRET should be set manually in Heroku
+// heroku config:set SOME_VARIABLE=Somevalue
