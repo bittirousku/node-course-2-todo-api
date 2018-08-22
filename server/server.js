@@ -75,7 +75,7 @@ app.delete("/todos/:id", authenticate, (request, response) => {
     return response.status(404).send();
   }
   // Delete by id
-  Todo.findOneAndRemove({
+  Todo.findOneAndDelete({
     _id: id,
     _creator: request.user._id
   }).then((todo) => {

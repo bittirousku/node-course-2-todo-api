@@ -68,7 +68,7 @@ UserSchema.methods.removeToken = function (tokenToDelete) {
   let user = this;
   // update the user document by pulling (removing) the matching token
   // from the token array:
-  return user.update({
+  return user.updateOne({
     $pull: {
       tokens: {
         token: tokenToDelete
