@@ -35,7 +35,7 @@ let UserSchema = new mongoose.Schema({
   }]
 });
 
-// methods are instance methods
+// "methods" are instance methods
 // Override method toJSON to limit what gets back to user
 UserSchema.methods.toJSON = function () {
   let user = this;
@@ -65,7 +65,21 @@ UserSchema.methods.generateAuthToken = function () {
   });
 };
 
-// statics are model methods
+UserSchema.methods.removeToken = function (tokenToDelete) {
+  let user = this;
+  // update the user document by pulling (removing) the matching token
+  // from the token array:
+  return user.update({
+    $pull: {
+      tokens: {
+        token: tokenToDelete
+      }
+    }
+  });
+};
+
+
+// "statics" are model methods
 UserSchema.statics.findByToken = function (token) {
   let User = this;
   let decoded;

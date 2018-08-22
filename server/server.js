@@ -145,7 +145,14 @@ app.post("/users/login", (request, response) => {
   });
 });
 
-
+app.delete("/users/me/token", authenticate, (request, response) => {
+  let user = request.user;
+  user.removeToken(request.token).then(() => {
+    response.status(200).send();
+  }, () => {
+    response.status(400).send();
+  });
+});
 
 
 // Start server
